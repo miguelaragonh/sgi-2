@@ -1,0 +1,8 @@
+{
+  "name": "SGI2",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite",
+  "id": "36022e84"
+}
