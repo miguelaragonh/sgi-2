@@ -21,7 +21,7 @@ const Page: React.FC<PageProps> = ({ childComponent }) => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
+      <IonContent >
         {childComponent}
       </IonContent>
     </IonPage>
