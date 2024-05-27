@@ -47,16 +47,18 @@ function Modal() {
               <IonButton
                 onClick={() => modal.current?.dismiss()}
                 color="danger"
+                fill="clear"
               >
                 Cancel
               </IonButton>
             </IonButtons>
-            <IonTitle>Nuevo Usuario</IonTitle>
+            <IonTitle style={{ justifyContent: "center", textAlign: "center", color:'black'}}>Nuevo Usuario</IonTitle>
             <IonButtons slot="end">
               <IonButton
                 strong={true}
                 onClick={() => confirm()}
-                color="success"
+                color="primary"
+                fill="clear"
               >
                 Confirm
               </IonButton>

@@ -1,29 +1,37 @@
-import React from 'react';
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import { useParams } from 'react-router';
-import './Page.css';
+import React from "react";
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/react";
+import { useParams } from "react-router";
+import "./Page.css";
+import { useAuth } from "../components/UserContext";
 
 interface PageProps {
   childComponent: React.ReactNode;
 }
 
 const Page: React.FC<PageProps> = ({ childComponent }) => {
-  const { name } = useParams<{ name: string; }>();
-
+  const { datos, isAuthenticated } = useAuth();
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton />
-          </IonButtons>
-          <IonTitle>{name}</IonTitle>
+          {isAuthenticated && (
+            <IonButtons slot="end">
+              <IonMenuButton />
+            </IonButtons>
+          )}
+          <IonTitle style={{ color: "#000000" }}>SGI</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent >
-        {childComponent}
-      </IonContent>
+      <IonContent>{childComponent}</IonContent>
     </IonPage>
   );
 };

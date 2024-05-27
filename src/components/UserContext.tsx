@@ -1,5 +1,7 @@
 import { FC, useEffect } from "react";
 import { createContext, useContext, useState } from "react";
+import Cookies from 'js-cookie';
+
 
 const AuthContext = createContext<any>(null);
 
@@ -13,6 +15,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState(null);
+  const [nombre, setNombre] = useState(null);
   const [errors, setErrors] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -41,16 +44,28 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     try {
       const res = user;
       if (res) {
-        setUser(res.data);
-        console.log(user);
+        setUser(res);
         setIsAuthenticated(true);
-        console.log(isAuthenticated);
+        
       }
     } catch (error: any) {
       console.log(error.response.data);
       setErrors(error.response.data.message);
     }
   };
+   const logout = () => {
+    //Cookies.remove("token");
+    localStorage.clear();
+    setUser(null);
+    setIsAuthenticated(false);
+    
+  };
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
   /*
   const signin = async (user: any) => {
     try {
@@ -63,44 +78,20 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const logout = () => {
-    Cookies.remove("token");
-    setUser(null);
-    setIsAuthenticated(false);
-  };
+ 
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      const cookies = Cookies.get();
-      if (!cookies.token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await verifyTokenRequest(cookies.token);
-        console.log(res);
-        if (!res.data) return setIsAuthenticated(false);
-        setIsAuthenticated(true);
-        setUser(res.data);
-        setLoading(false);
-      } catch (error) {
-        setIsAuthenticated(false);
-        setLoading(false);
-      }
-    };
-    checkLogin();
-  }, []);*/
+  */
 
   return (
     <AuthContext.Provider
       value={{
-        user,
         datos,
         isAuthenticated,
-        /*signin,
+        user,
+        nombre,
         logout,
+        /*signin,
+        
         
         errors,
         loading,*/
