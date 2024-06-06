@@ -13,7 +13,6 @@ import {
   IonPage,
   IonRow,
 } from "@ionic/react";
-import Modal from "./Modal";
 import axios, { Axios } from "axios";
 import FormUsuario from "./FormUsuario";
 
@@ -47,7 +46,7 @@ function Usuario() {
       </IonItem>
       <IonItem>
         <IonLabel>
-          <Modal childComponent={<FormUsuario/>} />
+          <FormUsuario/>
         </IonLabel>
       </IonItem>
       {

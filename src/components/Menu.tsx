@@ -12,7 +12,7 @@ import {
   IonNote,
 } from "@ionic/react";
 import { useHistory, useLocation } from "react-router-dom";
-import "./Menu.css";
+import "../style/Menu.css";
 import { useAuth } from "./UserContext";
 
 interface AppPage {
@@ -53,7 +53,7 @@ const Menu: React.FC = () => {
     <IonMenu contentId="main" type="overlay" side="end">
       <IonContent>
         <IonList id="inbox-list">
-          {isAuthenticated && (<IonCard><br/>
+          {isAuthenticated && (<IonCard><br/> 
             <IonListHeader>{user.usuario.CT_Nombre}</IonListHeader>
             <IonNote>{user.usuario.CT_Usuario}</IonNote>
         </IonCard>)}

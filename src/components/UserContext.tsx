@@ -1,6 +1,5 @@
 import { FC, useEffect } from "react";
 import { createContext, useContext, useState } from "react";
-import Cookies from 'js-cookie';
 
 
 const AuthContext = createContext<any>(null);
@@ -10,6 +9,23 @@ export const useAuth = () => {
   if (!context) throw new Error("useAuth must be used within a AuthProvider");
   return context;
 };
+
+function decodeToken(token:any) {
+  const parts = token.split('.');
+  if (parts.length !== 3) {
+    throw new Error('El token no es un JWT válido');
+  }
+
+  const payload = parts[1];
+  const decodedPayload = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+  
+  try {
+   return JSON.parse(decodedPayload);
+  } catch (err) {
+    console.error('Error al decodificar la carga útil del token', err);
+    return null;
+  }
+}
 
 export const AuthProvider: FC<{ children: React.ReactNode }> = ({
   children,
@@ -28,6 +44,16 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       return () => clearTimeout(timer);
     }
   }, [errors])
+  
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) { 
+      const usuarios=decodeToken(token);
+      setUser(usuarios);
+      setIsAuthenticated(true);
+     
+    }
+  }, []);
   /*const [loading, setLoading] = useState(true);
 
   // clear errors after 5 seconds
@@ -46,7 +72,6 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       if (res) {
         setUser(res);
         setIsAuthenticated(true);
-        
       }
     } catch (error: any) {
       console.log(error.response.data);
@@ -60,12 +85,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     setIsAuthenticated(false);
     
   };
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      setIsAuthenticated(true);
-    }
-  }, []);
+  
   /*
   const signin = async (user: any) => {
     try {
