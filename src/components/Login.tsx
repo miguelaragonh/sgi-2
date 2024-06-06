@@ -51,17 +51,14 @@ function Login() {
       validarContrasena(contrasena) == false
     ) {
       axios
-        .post(
-          "/usuarios/iniciar",
-          {
-            CT_Usuario: usuario,
-            CT_Contraseña: contrasena,
-          }
-        )
+        .post("/usuarios/iniciar", {
+          CT_Usuario: usuario,
+          CT_Contraseña: contrasena,
+        })
         .then((response) => {
           setData(response.data);
           datos(response.data);
-          localStorage.setItem('token', response.data.token);
+          localStorage.setItem("token", response.data.token);
         });
     } else {
       console.log("No datos");

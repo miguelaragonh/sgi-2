@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -14,41 +14,32 @@ import {
   IonRow,
 } from "@ionic/react";
 import Modal from "./Modal";
+import axios, { Axios } from "axios";
+import FormUsuario from "./FormUsuario";
 
 function Usuario() {
+ 
+  const [usuarios, setUsuarios] = useState([]);
   interface Usuario {
-    Nombre: string;
-    Cedula: string;
-    Correo: string;
-    Numero: string;
-    Puesto: string;
+    CT_Codigo_Usuario: string;
+    CT_Nombre: string;
+    CT_Usuario: string;
+    CN_Numero_Telefonico: string;
+    CT_Puesto: string;
     Departamento: string;
   }
+  
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/usuarios`)
+      .then((response) => {
+        setUsuarios(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de estados:", error);
+      });
+  }, []);
 
-  const Usuarios: Usuario[] = [
-    {
-      Nombre: "Miguel Aragon Duarte",
-      Cedula: "701450245",
-      Correo: "luis.aragonduarte@ucr.ac.cr",
-      Numero: "61781852",
-      Puesto: "Desarrollador Web",
-      Departamento: "IT",
-    },{
-      Nombre: "Miguel Aragon Duarte",
-      Cedula: "701450245",
-      Correo: "luis.aragonduarte@ucr.ac.cr",
-      Numero: "61781852",
-      Puesto: "Desarrollador Web",
-      Departamento: "IT",
-    },{
-      Nombre: "Miguel Aragon Duarte",
-      Cedula: "701450245",
-      Correo: "luis.aragonduarte@ucr.ac.cr",
-      Numero: "61781852",
-      Puesto: "Desarrollador Web",
-      Departamento: "IT",
-    },
-  ];
   return (
     <>
       <IonItem style={{ justifyContent: "center", textAlign: "center" }}>
@@ -56,38 +47,49 @@ function Usuario() {
       </IonItem>
       <IonItem>
         <IonLabel>
-          <Modal />
+          <Modal childComponent={<FormUsuario/>} />
         </IonLabel>
       </IonItem>
-      {Usuarios.map((Usuario,index)=>{return(
-      <IonCard key={index}>
-        <IonCardHeader>
-          <IonCardTitle>{Usuario.Nombre}</IonCardTitle>
-          <IonCardSubtitle>Cedula:{Usuario.Cedula}</IonCardSubtitle>
-        </IonCardHeader>
+      {
+  usuarios && usuarios.length > 0 ? (
+    usuarios.map((usuario) => {
+      return (
+        <IonCard key={usuario.CT_Codigo_Usuario}>
+          <IonCardHeader>
+            <IonCardTitle>{usuario.CT_Nombre}</IonCardTitle>
+            <IonCardSubtitle>Cedula:{usuario.CT_Codigo_Usuario}</IonCardSubtitle>
+          </IonCardHeader>
 
-        <IonCardContent>
-          Correo:{Usuario.Correo} <br />
-          Numero Telefonico: {Usuario.Numero}
-          <br />
-          Puesto :{Usuario.Puesto} <br />
-          Departamento: {Usuario.Departamento}
-        </IonCardContent>
-        <IonGrid>
-          <IonRow>
-            <IonCol size="2" offset="0">
-              <IonButton fill="outline" size="small" color="sumary">
-                Editar
-              </IonButton>
-            </IonCol>
-            <IonCol size="2" offset="1">
-              <IonButton fill="outline" size="small" color="danger">
-                Eliminar
-              </IonButton>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-      </IonCard>)})}
+          <IonCardContent>
+            Correo:{usuario.CT_Usuario} <br />
+            Numero Telefonico: {usuario.CN_Numero_Telefonico}
+            <br />
+            Puesto :{usuario.CT_Puesto} <br />
+            Departamento: {usuario.T_Departamento.CT_Descripcion}
+          </IonCardContent>
+          <IonGrid>
+            <IonRow>
+              <IonCol size="2" offset="0">
+                <IonButton fill="outline" size="small" color="sumary" id="open-modal">
+                  Editar
+                </IonButton>
+              </IonCol>
+              <IonCol size="2" offset="1">
+                <IonButton fill="outline" size="small" color="danger">
+                  Eliminar
+                </IonButton>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonCard>
+      );
+    })
+  ) : (
+    <IonItem>
+      <IonLabel>No hay usuarios</IonLabel>
+    </IonItem>
+  )
+}
     </>
   );
 }

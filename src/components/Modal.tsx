@@ -13,23 +13,15 @@ import {
 } from "@ionic/react";
 import { OverlayEventDetail } from "@ionic/core/components";
 
-function Modal() {
+function Modal({ childComponent}:any) {
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
 
-  const [message, setMessage] = useState(
-    "This modal example uses triggers to automatically open a modal when the button is clicked."
-  );
 
   function confirm() {
     modal.current?.dismiss(input.current?.value, "confirm");
   }
 
-  function onWillDismiss(ev: CustomEvent<OverlayEventDetail>) {
-    if (ev.detail.role === "confirm") {
-      setMessage(`Hello, ${ev.detail.data}!`);
-    }
-  }
 
   return (
     <IonPage>
@@ -67,13 +59,8 @@ function Modal() {
         </IonHeader>
         <IonContent className="ion-padding">
           <IonItem>
-            <IonInput
-              label="Enter your name"
-              labelPlacement="stacked"
-              ref={input}
-              type="text"
-              placeholder="Your name"
-            />
+            {childComponent}
+           
           </IonItem>
         </IonContent>
       </IonModal>
