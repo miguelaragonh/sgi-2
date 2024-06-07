@@ -5,7 +5,7 @@ function Example() {
   return (
     <IonCard >
           <IonCardHeader>
-            <IonCardTitle>Bienvenidos </IonCardTitle>
+            <IonCardTitle>Bienvenid(a) </IonCardTitle>
             <IonCardSubtitle>Sistema de Incidentes UCR - Sede Caribe</IonCardSubtitle>
           </IonCardHeader>
 

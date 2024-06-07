@@ -44,6 +44,9 @@ const Menu: React.FC = () => {
         {
           title: "Usuarios",
           url: "/usuarios",
+        },{
+          title: "Lista Incidentes-Usuario",
+          url: "/incidentes-usuario",
         },
       ];
     }

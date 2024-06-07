@@ -14,18 +14,20 @@ import {
   IonRow,
 } from "@ionic/react";
 import axios, { Axios } from "axios";
-import FormUsuario from "./Formularios/FormUsuario";
+import FormNuevaIncidencia from "./Formularios/FormNuevaIncidencia";
+import { useAuth } from "./UserContext";
+
 
 function Usuario() {
  const puerto = 'http://localhost:3000';
-  const [usuarios, setUsuarios] = useState([]);
- 
+  const [incidentes, setIncidente] = useState([]); 
+  const {user } = useAuth();
   
   useEffect(() => {
     axios
-      .get(`${puerto}/usuarios`)
+      .get(`${puerto}/incidencias/${user.usuario.CT_Codigo_Usuario}`)
       .then((response) => {
-        setUsuarios(response.data);
+        setIncidente(response.data);
       })
       .catch((error) => {
         console.error("Error al obtener la lista de estados:", error);
@@ -35,34 +37,31 @@ function Usuario() {
   return (
     <>
       <IonItem style={{ justifyContent: "center", textAlign: "center" }}>
-        <IonLabel>Lista de Usuarios</IonLabel>
+        <IonLabel>Lista Incidente-Usuario</IonLabel>
       </IonItem>
       <IonItem>
         <IonLabel>
-          <FormUsuario/>
+          <FormNuevaIncidencia id={user.usuario.CT_Codigo_Usuario}/>
         </IonLabel>
       </IonItem>
       {
-  usuarios && usuarios.length > 0 ? (
-    usuarios.map((usuario) => {
+  incidentes && incidentes.length > 0 ? (
+   incidentes.map((incidente) => {
       return (
-        <IonCard key={usuario.CT_Codigo_Usuario}>
+        <IonCard key={incidente.CT_Id_Incidencia}>
           <IonCardHeader>
-            <IonCardTitle>{usuario.CT_Nombre}</IonCardTitle>
-            <IonCardSubtitle>Cedula:{usuario.CT_Codigo_Usuario}</IonCardSubtitle>
+            <IonCardTitle>{incidente.T_Incidencia.CT_Titulo}</IonCardTitle>
+            <IonCardSubtitle>Codigo Incidente:{incidente.CT_Id_Incidencia}</IonCardSubtitle>
           </IonCardHeader>
 
           <IonCardContent>
-            Correo:{usuario.CT_Usuario} <br />
-            Numero Telefonico: {usuario.CN_Numero_Telefonico}
-            <br />
-            Puesto :{usuario.CT_Puesto} <br />
-            Departamento: {usuario.T_Departamento.CT_Descripcion}
+            Descripcion:{incidente.T_Incidencia.CT_Descripcion} <br />
+            Lugar: {incidente.T_Incidencia.CT_Lugar}
+           
           </IonCardContent>
           <IonGrid>
             <IonRow>
               <IonCol size="2" offset="0">
-              <FormUsuario id={ usuario.CT_Codigo_Usuario} datos={usuario}/>
               </IonCol>
             
             </IonRow>

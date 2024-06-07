@@ -13,6 +13,7 @@ import Login from "./components/Login";
 import Home from "./components/Home";
 import Aboutme from "./components/About";
 import Usuarios from "./components/Usuario";
+import IncidenteNuevo from "./components/IncidenteNuevo";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -38,25 +39,16 @@ import { RouteUsuario } from "./Rutas";
 setupIonicReact();
 
 const App: React.FC = () => {
-  
-
   return (
     <AuthProvider>
-      
       <IonApp>
         <IonReactRouter>
           <IonSplitPane contentId="main">
             <Menu />
-              
             <IonRouterOutlet id="main">
-                <Route path="/" exact={true}>
-                 <Redirect to="/home" />
-              </Route>
-
               <Route path="/login" exact={true}>
                 <Page childComponent={<Login />} />
               </Route>
-
               <RouteUsuario
                 path="/aboutme"
                 exact
@@ -68,10 +60,19 @@ const App: React.FC = () => {
                 component={() => <Page childComponent={<Usuarios />} />}
               />
               <RouteUsuario
+                path="/incidentes-usuario"
+                exactincidentes-usuario
+                component={() => <Page childComponent={<IncidenteNuevo/>} />}
+              />
+
+              <RouteUsuario
                 path="/home"
                 exact
                 component={() => <Page childComponent={<Home />} />}
               />
+              <Route path="/" exact={true}>
+                <Redirect to="/home" />
+              </Route>
             </IonRouterOutlet>
           </IonSplitPane>
         </IonReactRouter>
