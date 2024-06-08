@@ -13,26 +13,51 @@ import {
   IonPage,
   IonRow,
 } from "@ionic/react";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import FormNuevaIncidencia from "./Formularios/FormNuevaIncidencia";
 import { useAuth } from "./UserContext";
+import { i } from "vite/dist/node/types.d-aGj9QkWt";
 
+function IncidenteNuevo() {
+  const puerto = 'http://localhost:3000';
+  const [incidentes, setIncidente] = useState([]);
+  const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
+  const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
+  const { user } = useAuth();
 
-function Usuario() {
- const puerto = 'http://localhost:3000';
-  const [incidentes, setIncidente] = useState([]); 
-  const {user } = useAuth();
-  
   useEffect(() => {
-    axios
-      .get(`${puerto}/incidencias/${user.usuario.CT_Codigo_Usuario}`)
+    axios.get(`${puerto}/incidencias/${user.usuario.CT_Codigo_Usuario}`)
       .then((response) => {
         setIncidente(response.data);
+        // Cargar imágenes después de cargar incidentes
+        response.data.forEach(incidente => {
+          getImagen(incidente.CT_Id_Incidencia);
+          getEstado(incidente.CN_Id_Estado);
+        });
       })
       .catch((error) => {
         console.error("Error al obtener la lista de estados:", error);
       });
   }, []);
+
+  async function getImagen(img:any) {
+    try {
+      const response = await axios.get(`${puerto}/incidencia/imagen/${img}`);
+      setImagenes(prev => ({ ...prev, [img]: response.data }));
+    } catch (error) {
+      console.error("Error al obtener la imagen:", error);
+    }
+  }
+
+  async function getEstado(idEstado:any) {
+    try {
+      const estados = await axios.get(`${puerto}/estados/${idEstado}`);
+      console.log(estados.data.CT_Descripcion);
+      setEstados(prev => ({ ...prev, [idEstado]: estados.data.CT_Descripcion}));
+    } catch (error) {
+      console.error("Error al obtener la imagen:", error);
+    }
+  }
 
   return (
     <>
@@ -45,37 +70,30 @@ function Usuario() {
         </IonLabel>
       </IonItem>
       {
-  incidentes && incidentes.length > 0 ? (
-   incidentes.map((incidente) => {
-      return (
-        <IonCard key={incidente.CT_Id_Incidencia}>
-          <IonCardHeader>
-            <IonCardTitle>{incidente.T_Incidencia.CT_Titulo}</IonCardTitle>
-            <IonCardSubtitle>Codigo Incidente:{incidente.CT_Id_Incidencia}</IonCardSubtitle>
-          </IonCardHeader>
+        incidentes && incidentes.length > 0 ? (
+          incidentes.map((incidente) => (
+            <IonCard key={incidente.CT_Id_Incidencia}>
+              <img alt={incidente.CT_Descripcion} src={imagenes[incidente.CT_Id_Incidencia]} />
+              <IonCardHeader>
+                <IonCardTitle>{incidente.CT_Titulo}</IonCardTitle>
+                <IonCardSubtitle>Codigo Incidente:{incidente.CT_Id_Incidencia}</IonCardSubtitle>
+              </IonCardHeader>
 
-          <IonCardContent>
-            Descripcion:{incidente.T_Incidencia.CT_Descripcion} <br />
-            Lugar: {incidente.T_Incidencia.CT_Lugar}
-           
-          </IonCardContent>
-          <IonGrid>
-            <IonRow>
-              <IonCol size="2" offset="0">
-              </IonCol>
-            
-            </IonRow>
-          </IonGrid>
-        </IonCard>
-      );
-    })
-  ) : (
-    <IonItem>
-      <IonLabel>No hay usuarios</IonLabel>
-    </IonItem>
-  )
-}
+              <IonCardContent>
+                Descripcion:{incidente.CT_Descripcion} <br />
+                Lugar: {incidente.CT_Lugar}<br />
+                Estados: {estados[incidente.CN_Id_Estado]}
+              </IonCardContent>
+            </IonCard>
+          ))
+        ) : (
+          <IonItem>
+            <IonLabel style={{ justifyContent: "center", textAlign: "center" }}>Aun no tienes incidentes agregados</IonLabel>
+          </IonItem>
+        )
+      }
     </>
   );
 }
-export default Usuario;
+
+export default IncidenteNuevo;

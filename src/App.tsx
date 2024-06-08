@@ -14,6 +14,8 @@ import Home from "./components/Home";
 import Aboutme from "./components/About";
 import Usuarios from "./components/Usuario";
 import IncidenteNuevo from "./components/IncidenteNuevo";
+import DiagnosticoIncidente from "./components/DiagnosticoIncidente";
+import AsignarIncidente from "./components/AsignarIncidentes";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -62,7 +64,19 @@ const App: React.FC = () => {
               <RouteUsuario
                 path="/incidentes-usuario"
                 exactincidentes-usuario
-                component={() => <Page childComponent={<IncidenteNuevo/>} />}
+                component={() => <Page childComponent={<IncidenteNuevo />} />}
+              />
+
+              <RouteUsuario
+                path="/asignar-incidente"
+                exactincidentes-usuario
+                component={() => <Page childComponent={<AsignarIncidente />} />}
+              />
+
+              <RouteUsuario
+                path="/diagnosticar-incidente"
+                exactincidentes-usuario
+                component={() => <Page childComponent={<DiagnosticoIncidente />} />}
               />
 
               <RouteUsuario

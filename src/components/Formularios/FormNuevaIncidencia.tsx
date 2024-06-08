@@ -38,6 +38,7 @@ function FormNuevaIncidencia({ id }: any) {
     setTitulo("");
     setDescripcion("");
     setTituloError("");
+    setLugar("");
     setDescripcionError("");
     setPeticionError("");
     setBase64Error("");
@@ -63,7 +64,7 @@ function FormNuevaIncidencia({ id }: any) {
         );
       });
   }
-  const handleImageUpload = (event) => {
+  const handleImageUpload = (event:any) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();

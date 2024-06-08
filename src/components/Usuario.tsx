@@ -15,6 +15,7 @@ import {
 } from "@ionic/react";
 import axios, { Axios } from "axios";
 import FormUsuario from "./Formularios/FormUsuario";
+import SelectRol from "./Formularios/SelectRol";
 
 function Usuario() {
  const puerto = 'http://localhost:3000';
@@ -64,6 +65,9 @@ function Usuario() {
               <IonCol size="2" offset="0">
               <FormUsuario id={ usuario.CT_Codigo_Usuario} datos={usuario}/>
               </IonCol>
+              <IonCol size="2" offset="1">
+              <SelectRol/>
+              </IonCol>
             
             </IonRow>
           </IonGrid>
@@ -72,7 +76,7 @@ function Usuario() {
     })
   ) : (
     <IonItem>
-      <IonLabel>No hay usuarios</IonLabel>
+      <IonLabel  style={{ justifyContent: "center", textAlign: "center" }}>No hay usuarios agregados</IonLabel>
     </IonItem>
   )
 }

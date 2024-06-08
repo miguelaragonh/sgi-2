@@ -48,6 +48,14 @@ const Menu: React.FC = () => {
           title: "Lista Incidentes-Usuario",
           url: "/incidentes-usuario",
         },
+        {
+          title: "Asignar Incidente",
+          url: "/asignar-incidente",
+        },
+        {
+          title: "Lista Incidentes-Tecnico",
+          url: "/diagnosticar-incidente",
+        },
       ];
     }
   }, [isAuthenticated]);
