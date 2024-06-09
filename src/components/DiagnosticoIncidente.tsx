@@ -89,7 +89,7 @@ function DiagnosticarIncidente() {
               Estados: {estados[incidente.CN_Id_Estado]}
             </IonCardContent>
             <IonGrid>
-              {incidente.CN_Id_Estado == 2 && (
+              
                 <IonRow>
                   <IonCol size="2" offset="0">
                     <FormDiagnostico
@@ -101,7 +101,6 @@ function DiagnosticarIncidente() {
                     />
                   </IonCol>
                 </IonRow>
-              )}
             </IonGrid>
           </IonCard>
         ))

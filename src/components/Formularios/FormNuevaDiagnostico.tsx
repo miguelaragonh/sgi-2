@@ -188,9 +188,10 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
           }
         `}
         </style>
+        {estado=="Registrado" && ( 
         <IonButton id={id} fill="outline" size="small" color="sumary">
           Diagnosticar
-        </IonButton>
+        </IonButton> )}
         <IonModal
           ref={modal}
           trigger={id}
@@ -235,7 +236,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                     !CT_Compra
                   }
                 >
-                  Confirm
+                  Terminar
                 </IonButton>
               </IonButtons>
             </IonToolbar>

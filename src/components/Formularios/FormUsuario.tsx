@@ -52,12 +52,14 @@ function FormUsuario({ id, datos }: any) {
         CT_Nombre: nombre,
         CT_Usuario: correo,
         CN_Numero_Telefonico: telefono,
+        CT_Contraseña: contrasena,
         CT_Puesto: puesto,
         CN_Id_Departamento: departamento,
       })
       .then(function (response) {
         console.log(response);
         modal.current?.dismiss(input.current?.value, "confirm");
+        window.location.href = "/usuarios";
       })
       .catch(function (error) {
         console.log(error);

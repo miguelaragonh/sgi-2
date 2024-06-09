@@ -538,7 +538,7 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
                           key={Tecnico.CN_Id}
                           value={Tecnico.CT_Codigo_Usuario}
                         >
-                          {Tecnico.Usuario}
+                         {Tecnico.CT_Codigo_Usuario}- {Tecnico.Usuario}
                         </IonSelectOption>
                       );
                     })

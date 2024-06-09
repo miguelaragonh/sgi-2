@@ -56,6 +56,7 @@ function FormNuevaIncidencia({ id }: any) {
       .then(function (response) {
         console.log(response);
         modal.current?.dismiss(input.current?.value, "confirm");
+        window.location.href = "/home";
       })
       .catch(function (error) {
         console.log(error);
@@ -147,7 +148,7 @@ function FormNuevaIncidencia({ id }: any) {
                 fill="clear"
                 disabled={!titulo || !descripcion}
               >
-                Confirm
+                Crear
               </IonButton>
             </IonButtons>
           </IonToolbar>
