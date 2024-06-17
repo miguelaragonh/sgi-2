@@ -8,7 +8,9 @@ import {
   IonMenuButton,
   IonPage,
   IonTitle,
+  IonToast,
   IonToolbar,
+  useIonLoading,
 } from "@ionic/react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 //const axios = require('axios/dist/node/axios.cjs');
@@ -23,6 +25,7 @@ import {
 import "../style/login.css";
 import { useAuth } from "./UserContext";
 import Cookies from "js-cookie";
+import Load from "./Load";
 function Login() {
   const [usuario, setUsuario] = useState("");
   const [data, setData] = useState(null);
@@ -31,7 +34,9 @@ function Login() {
   const [validacionContrasena, setValidacionContrasena] = useState(false);
   const { datos, isAuthenticated, user } = useAuth();
   const navigate = useHistory();
-
+  const [present, dismiss] = useIonLoading();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   useEffect(() => {
     if (isAuthenticated) navigate.push("/home");
   }, [isAuthenticated]);
@@ -50,16 +55,30 @@ function Login() {
       validarCorreo(usuario) == true &&
       validarContrasena(contrasena) == false
     ) {
-      axios
-        .post("/usuarios/iniciar", {
-          CT_Usuario: usuario,
-          CT_Contraseña: contrasena,
-        })
-        .then((response) => {
-          setData(response.data);
-          datos(response.data);
-          localStorage.setItem("token", response.data.token);
-        });
+      present({
+        message: "Cargando...",
+        duration: 1500,
+      });
+      setTimeout(() => {
+        axios
+          .post("/usuarios/iniciar", {
+            CT_Usuario: usuario,
+            CT_Contraseña: contrasena,
+          })
+          .then((response) => {
+            setData(response.data);
+            datos(response.data);
+            localStorage.setItem("token", response.data.token);
+          })
+          .catch((error) => {
+            if (error.response) {
+              setToastMessage(error.response.data.msg);
+              setShowToast(true);
+            }
+          }).finally(() => {
+            dismiss();
+          });
+      }, 1500); 
     } else {
       console.log("No datos");
     }
@@ -168,6 +187,15 @@ function Login() {
           </form>
         </IonCardContent>
       </IonCard>
+      <IonToast
+        trigger="headerAnchor"
+        position="top"
+        positionAnchor="header"
+        isOpen={showToast}
+        onDidDismiss={() => setShowToast(false)}
+        message={toastMessage}
+        duration={3000}
+      />
     </div>
   );
 }

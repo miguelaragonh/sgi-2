@@ -20,6 +20,7 @@ import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router";
 import { c, l } from "vite/dist/node/types.d-aGj9QkWt";
+import { useAuth } from "../UserContext";
 
 function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
   const puerto = "http://localhost:3000";
@@ -64,14 +65,9 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
   const [CompraError, setCompraError] = useState("");
   const [setTiempoSolucionError, setsetTiempoSolucionError] = useState("");
   const [peticionError, setPeticionErro] = useState("");
+  const { user } = useAuth();
 
   function diagnosticarIncidente() {
-    console.log("Diagnosticando");
-    console.log(CT_Descripcion);
-    console.log(CN_Tiempo_Solucion);
-    console.log(CodigoIncidente);
-    console.log(idUsuario);
-    console.log(CT_Compra);
     axios
       .post(`${puerto}/incidencia/crear/diagnostico`, {
         CT_Descripcion: CT_Descripcion,
@@ -90,6 +86,13 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
         setPeticionErro(
           "Error al agregar el usuario, " + error.response.data.msg
         );
+      });
+      axios
+      .post(`${puerto}/bitacora1`, {
+        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+        CN_Id_Pantalla: 3,
+        CT_Nombre_Referencia:
+          `acción=Diagnostica Incidente, Código de pantalla = 3, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
       });
   }
 
@@ -188,10 +191,9 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
           }
         `}
         </style>
-        {estado=="Registrado" && ( 
-        <IonButton id={id} fill="outline" size="small" color="sumary">
+        <IonButton id={id} fill="outline" size="small" color="sumary" onClick={()=>{console.log("click")}}>
           Diagnosticar
-        </IonButton> )}
+        </IonButton>
         <IonModal
           ref={modal}
           trigger={id}

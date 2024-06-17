@@ -17,6 +17,7 @@ import {
 import { OverlayEventDetail } from "@ionic/core/components";
 import { useHistory } from "react-router";
 import axios from "axios";
+import { useAuth } from "../UserContext";
 
 function FormNuevaIncidencia({ id }: any) {
   const puerto = "http://localhost:3000";
@@ -33,6 +34,7 @@ function FormNuevaIncidencia({ id }: any) {
   const [lugarError, setLugarError] = useState("");
   const [base64Error, setBase64Error] = useState("");
   const [peticionError, setPeticionError] = useState("");
+  const { user } = useAuth();
 
   const resetForm = () => {
     setTitulo("");
@@ -42,8 +44,9 @@ function FormNuevaIncidencia({ id }: any) {
     setDescripcionError("");
     setPeticionError("");
     setBase64Error("");
+    setBase64("");
+    
   };
-
   function crearIncidencia() {
     axios
       .post(`${puerto}/incidencia/crear`, {
@@ -56,13 +59,20 @@ function FormNuevaIncidencia({ id }: any) {
       .then(function (response) {
         console.log(response);
         modal.current?.dismiss(input.current?.value, "confirm");
-        window.location.href = "/home";
+        window.location.href = "/incidentes-usuario";
       })
       .catch(function (error) {
         console.log(error);
         setPeticionError(
           "Error al agregar el usuario, " + error.response.data.msg
         );
+      });
+      axios
+      .post(`${puerto}/bitacora1`, {
+        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+        CN_Id_Pantalla: 1,
+        CT_Nombre_Referencia:
+          `acción=Crear Incidente, Código de pantalla = 1, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
       });
   }
   const handleImageUpload = (event:any) => {
@@ -226,11 +236,17 @@ function FormNuevaIncidencia({ id }: any) {
               <input
                 type="file"
                 accept="image/*"
+                capture="environment"
                 onChange={handleImageUpload}
               />
               <IonText color="danger">{base64Error}</IonText>
             </IonRow>
             <br />
+            {base64 && (
+              <IonRow>
+                <img src={base64} alt="Preview" style={{ width: "100%" }} />
+              </IonRow>
+            )}
           </IonGrid>
           <IonText color="danger">{peticionError}</IonText>
         </IonContent>

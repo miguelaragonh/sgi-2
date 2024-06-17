@@ -20,6 +20,7 @@ import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router";
 import { c } from "vite/dist/node/types.d-aGj9QkWt";
+import { useAuth } from "../UserContext";
 
 
 function FormUsuario({ id, datos }: any) {
@@ -44,6 +45,7 @@ function FormUsuario({ id, datos }: any) {
   const [puestoError, setPuestoError] = useState("");
   const [departamentoError, setDepartamentoError] = useState("");
   const [peticionError, setPeticionErro] = useState("");
+  const { user } = useAuth();
 
   function agregarUsuario() {
     axios
@@ -64,6 +66,13 @@ function FormUsuario({ id, datos }: any) {
       .catch(function (error) {
         console.log(error);
         setPeticionErro("Error al agregar el usuario, "+ error.response.data.msg);
+      });
+      axios
+      .post(`${puerto}/bitacora1`, {
+        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+        CN_Id_Pantalla: 5,
+        CT_Nombre_Referencia:
+          `acción=Crea Usuario, Código de pantalla = 5, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
       });
   }
 

@@ -23,11 +23,11 @@ const Page: React.FC<PageProps> = ({ childComponent }) => {
       <IonHeader>
         <IonToolbar>
           {isAuthenticated && (
-            <IonButtons slot="end">
+            <IonButtons slot="start">
               <IonMenuButton />
             </IonButtons>
           )}
-          <IonTitle style={{ color: "#000000" }}>SGI</IonTitle>
+          <IonTitle style={{ color: "#000000" }} slot="end">SGI</IonTitle>
         </IonToolbar>
       </IonHeader>
 

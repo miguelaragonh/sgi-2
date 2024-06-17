@@ -12,6 +12,7 @@ import {
   IonLabel,
   IonPage,
   IonRow,
+  useIonLoading,
 } from "@ionic/react";
 import axios from "axios";
 import FormDiagnostico from "./Formularios/FormNuevaDiagnostico";
@@ -24,8 +25,14 @@ function DiagnosticarIncidente() {
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
   const { user } = useAuth();
+  const [present, dismiss] = useIonLoading();
 
   useEffect(() => {
+    present({
+      message: "Cargando...",
+      duration: 1500,
+    });
+    setTimeout(() => {
     axios
       .get(`${puerto}/incidencia-asignadas/${user.usuario.CT_Codigo_Usuario}`)
       .then((response) => {
@@ -38,7 +45,10 @@ function DiagnosticarIncidente() {
       })
       .catch((error) => {
         console.error("Error al obtener la lista de estados:", error);
+      }).finally(() => {
+        dismiss();
       });
+  }, 1500);
   }, []);
 
   async function getImagen(img: any) {
@@ -92,13 +102,15 @@ function DiagnosticarIncidente() {
               
                 <IonRow>
                   <IonCol size="2" offset="0">
+                    
+                     {estados[incidente.CN_Id_Estado] =="Asignado" && ( 
                     <FormDiagnostico
                       id={incidente.CT_Id_Incidencia}
                       idUsuario={user.usuario.CT_Codigo_Usuario}
                       datos={incidente}
                       imagen={imagenes[incidente.CT_Id_Incidencia]}
                       estado={estados[incidente.CN_Id_Estado]}
-                    />
+                    />)}
                   </IonCol>
                 </IonRow>
             </IonGrid>
@@ -107,7 +119,7 @@ function DiagnosticarIncidente() {
       ) : (
         <IonItem>
           <IonLabel style={{ justifyContent: "center", textAlign: "center" }}>
-            Aun no tienes incidentes agregados
+            Aun no tienes incidentes asignados
           </IonLabel>
         </IonItem>
       )}

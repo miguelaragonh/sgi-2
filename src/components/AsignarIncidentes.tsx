@@ -12,6 +12,7 @@ import {
   IonLabel,
   IonPage,
   IonRow,
+  useIonLoading,
 } from "@ionic/react";
 import axios from "axios";
 import FormAsignar from "./Formularios/FormAsignar";
@@ -24,21 +25,29 @@ function AsignarIncidentes() {
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
   const { user } = useAuth();
+  const [present, dismiss] = useIonLoading();
 
   useEffect(() => {
+    present({
+      message: "Cargando...",
+      duration: 1500,
+    });
+    setTimeout(() => {
     axios
-      .get(`${puerto}/incidenciaregistradas`)
+      .get(`${puerto}/incidenciaregistradas/1`)
       .then((response) => {
         setIncidente(response.data);
-        // Cargar imágenes después de cargar incidentes
-        response.data.forEach((incidente) => {
+        response.data.forEach((incidente:any) => {
           getImagen(incidente.CT_Id_Incidencia);
           getEstado(incidente.CN_Id_Estado);
         });
       })
       .catch((error) => {
         console.error("Error al obtener la lista de estados:", error);
+      }).finally(() => {
+        dismiss();
       });
+  }, 1500);
   }, []);
 
   async function getImagen(img: any) {

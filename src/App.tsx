@@ -76,7 +76,9 @@ const App: React.FC = () => {
               <RouteUsuario
                 path="/diagnosticar-incidente"
                 exactincidentes-usuario
-                component={() => <Page childComponent={<DiagnosticoIncidente />} />}
+                component={() => (
+                  <Page childComponent={<DiagnosticoIncidente />} />
+                )}
               />
 
               <RouteUsuario

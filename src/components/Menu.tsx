@@ -38,10 +38,6 @@ const Menu: React.FC = () => {
           url: "/home",
         },
         {
-          title: "About Me",
-          url: "/aboutme",
-        },
-        {
           title: "Usuarios",
           url: "/usuarios",
         },{
@@ -61,7 +57,7 @@ const Menu: React.FC = () => {
   }, [isAuthenticated]);
 
   return (
-    <IonMenu contentId="main" type="overlay" side="end">
+    <IonMenu contentId="main" type="overlay" side="start">
       <IonContent>
         <IonList id="inbox-list">
           {isAuthenticated && (<IonCard><br/> 

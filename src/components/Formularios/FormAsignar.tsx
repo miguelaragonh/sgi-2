@@ -19,7 +19,8 @@ import {
 import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router";
-import { c, l } from "vite/dist/node/types.d-aGj9QkWt";
+import { useAuth } from "../UserContext";
+
 
 function FormUsuario({ id, datos, imagen, estado }: any) {
   const puerto = "http://localhost:3000";
@@ -56,9 +57,10 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
   const [AfectacionError, setAfectacionError] = useState("");
   const [TecnicoError, setTecnicoError] = useState("");
   const [peticionError, setPeticionErro] = useState("");
+  const { user } = useAuth();
 
   function asignarIncidente() {
-   axios
+    axios
       .put(`${puerto}/incidencia/editar/${CodigoIncidente}`, {
         CN_Costos: Costos,
         CN_Duracion: Duracion,
@@ -70,13 +72,19 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
       })
       .then(function (response) {
         console.log(response);
-        
       })
       .catch(function (error) {
         console.log(error);
         setPeticionErro(
           "Error al agregar el usuario, " + error.response.data.msg
         );
+      });
+    axios
+      .post(`${puerto}/bitacora1`, {
+        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+        CN_Id_Pantalla: 2,
+        CT_Nombre_Referencia:
+          `acción=Asigna Incidente, Código de pantalla = 2, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
       });
     axios
       .post(`${puerto}/incidencia/asignar/${CodigoIncidente}`, {
@@ -93,16 +101,6 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
           "Error al agregar el usuario, " + error.response.data.msg
         );
       });
-    /* window.location.href = "/home";
-    console.log("Editando");
-    console.log(CodigoIncidente);
-    console.log(Costos);
-    console.log(Duracion);
-    console.log(Categoria);
-    console.log(Prioridad);
-    console.log(Riesgo);
-    console.log(Afectacion);
-    console.log(Tecnico);*/
   }
 
   function resetearEstados() {
@@ -538,7 +536,7 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
                           key={Tecnico.CN_Id}
                           value={Tecnico.CT_Codigo_Usuario}
                         >
-                         {Tecnico.CT_Codigo_Usuario}- {Tecnico.Usuario}
+                          {Tecnico.CT_Codigo_Usuario}- {Tecnico.Usuario}
                         </IonSelectOption>
                       );
                     })
