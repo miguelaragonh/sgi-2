@@ -55,6 +55,9 @@ const Menu: React.FC = () => {
         {
           title: "Supervisar Incidentes",
           url: "/supervisar-incidente",
+        },{
+          title: "Reportes Cargas de trabajos",
+          url: "/cargas-trabajo",
         },
       ];
     }

@@ -38,6 +38,7 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import { AuthProvider, useAuth } from "./components/UserContext";
 import { RouteUsuario } from "./Rutas";
+import ReportesCargaTrabajo from "./components/ReportesCargaTrabajo";
 
 setupIonicReact();
 
@@ -86,6 +87,11 @@ const App: React.FC = () => {
                 exact
                 component={() => <Page childComponent={<SupervisarIncidentes />} />}
               />
+              <RouteUsuario
+              path="/cargas-trabajo"
+              exact
+              component={() => <Page childComponent={<ReportesCargaTrabajo />} />}
+            />
               <RouteUsuario
                 path="/home"
                 exact
