@@ -52,6 +52,10 @@ const Menu: React.FC = () => {
           title: "Lista Incidentes-Tecnico",
           url: "/diagnosticar-incidente",
         },
+        {
+          title: "Supervisar Incidentes",
+          url: "/supervisar-incidente",
+        },
       ];
     }
   }, [isAuthenticated]);

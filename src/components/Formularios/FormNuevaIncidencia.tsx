@@ -45,7 +45,6 @@ function FormNuevaIncidencia({ id }: any) {
     setPeticionError("");
     setBase64Error("");
     setBase64("");
-    
   };
   function crearIncidencia() {
     axios
@@ -54,12 +53,12 @@ function FormNuevaIncidencia({ id }: any) {
         CT_Descripcion: descripcion,
         CT_Lugar: lugar,
         Usuario: id,
-        img: base64
+        img: base64,
       })
       .then(function (response) {
         console.log(response);
         modal.current?.dismiss(input.current?.value, "confirm");
-        window.location.href = "/incidentes-usuario";
+        window.location.href = "/home";
       })
       .catch(function (error) {
         console.log(error);
@@ -67,15 +66,13 @@ function FormNuevaIncidencia({ id }: any) {
           "Error al agregar el usuario, " + error.response.data.msg
         );
       });
-      axios
-      .post(`${puerto}/bitacora1`, {
-        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
-        CN_Id_Pantalla: 1,
-        CT_Nombre_Referencia:
-          `acción=Crear Incidente, Código de pantalla = 1, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
-      });
+    axios.post(`${puerto}/bitacora1`, {
+      CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+      CN_Id_Pantalla: 1,
+      CT_Nombre_Referencia: `acción=Crear Incidente, Código de pantalla = 1, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
+    });
   }
-  const handleImageUpload = (event:any) => {
+  const handleImageUpload = (event: any) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();

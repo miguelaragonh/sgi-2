@@ -12,6 +12,7 @@ import {
   IonLabel,
   IonPage,
   IonRow,
+  IonSearchbar,
   useIonLoading,
 } from "@ionic/react";
 import axios from "axios";
@@ -26,7 +27,11 @@ function AsignarIncidentes() {
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
   const { user } = useAuth();
   const [present, dismiss] = useIonLoading();
+  const [searchText, setSearchText] = useState(""); // Nuevo estado para el valor
 
+  const incidentesFiltrados = incidentes.filter((incidente) =>
+    incidente.CT_Id_Incidencia.toString().includes(searchText)
+  );
   useEffect(() => {
     present({
       message: "Cargando...",
@@ -74,11 +79,28 @@ function AsignarIncidentes() {
 
   return (
     <>
-      <IonItem style={{ justifyContent: "center", textAlign: "center" }}>
+      <IonItem style={{
+          justifyContent: "center",
+          textAlign: "center",
+          flexDirection: "column",
+        }}>
         <IonLabel>Lista Incidente-Usuario</IonLabel>
       </IonItem>
-      {incidentes && incidentes.length > 0 ? (
-        incidentes.map((incidente) => (
+
+      <IonItem
+        style={{
+          justifyContent: "center",
+          textAlign: "center",
+          flexDirection: "column",
+        }}
+      >
+        <IonSearchbar
+          value={searchText}
+          onIonChange={(e) => setSearchText(e.detail.value)}
+        />
+      </IonItem>
+      {incidentesFiltrados && incidentesFiltrados.length > 0 ? (
+        incidentesFiltrados.map((incidente) => (
           <IonCard key={incidente.CT_Id_Incidencia}>
             <img
               alt={incidente.CT_Descripcion}
@@ -109,7 +131,7 @@ function AsignarIncidentes() {
       ) : (
         <IonItem>
           <IonLabel style={{ justifyContent: "center", textAlign: "center" }}>
-            Aun no tienes incidentes agregados
+            No hay incidentes registrados
           </IonLabel>
         </IonItem>
       )}

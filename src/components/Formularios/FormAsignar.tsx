@@ -21,7 +21,6 @@ import axios from "axios";
 import { Redirect, useHistory } from "react-router";
 import { useAuth } from "../UserContext";
 
-
 function FormUsuario({ id, datos, imagen, estado }: any) {
   const puerto = "http://localhost:3000";
   const history = useHistory();
@@ -79,19 +78,17 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
           "Error al agregar el usuario, " + error.response.data.msg
         );
       });
-    axios
-      .post(`${puerto}/bitacora1`, {
-        CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
-        CN_Id_Pantalla: 2,
-        CT_Nombre_Referencia:
-          `acción=Asigna Incidente, Código de pantalla = 2, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
-      });
+    axios.post(`${puerto}/bitacora1`, {
+      CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+      CN_Id_Pantalla: 2,
+      CT_Nombre_Referencia: `acción=Asigna Incidente, Código de pantalla = 2, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
+    });
     axios
       .post(`${puerto}/incidencia/asignar/${CodigoIncidente}`, {
         CT_Codigo_Usuario: Tecnico,
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data);
         modal.current?.dismiss(input.current?.value, "confirm");
         window.location.href = "/home";
       })
@@ -101,6 +98,13 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
           "Error al agregar el usuario, " + error.response.data.msg
         );
       });
+
+    axios.post(`${puerto}/bitacora2`, {
+      CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
+      CN_Id_Estado:estado == "Registrado" ? 1 : 0,
+      CN_Id_Nuevo_Estado: 2,
+      CT_Id_Incidencia: CodigoIncidente,
+    });
   }
 
   function resetearEstados() {
@@ -179,6 +183,7 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
 
   function confirm() {
     console.log("Editando");
+    console.log(Tecnico);
     asignarIncidente();
     actualizarDato();
   }
@@ -518,7 +523,21 @@ function FormUsuario({ id, datos, imagen, estado }: any) {
                   label="Tecnico"
                   fill="outline"
                   labelPlacement="floating"
+                  multiple={true}
                   value={Tecnico}
+                  onClick={() => {
+                    axios
+                      .get(`${puerto}/tecnicos`)
+                      .then((response) => {
+                        setTecnicos(response.data);
+                      })
+                      .catch((error) => {
+                        console.error(
+                          "Error al obtener la lista de estados:",
+                          error
+                        );
+                      });
+                  }}
                   onIonChange={(e: any) => {
                     const value = e.target.value;
                     if (value) {

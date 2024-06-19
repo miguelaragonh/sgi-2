@@ -22,9 +22,11 @@ import FromContrasena from "./Formularios/FormContrasena";
 function Usuario() {
   const puerto = "http://localhost:3000";
   const [usuarios, setUsuarios] = useState([]);
+  const [n, setN] = useState(0);
   const [present, dismiss] = useIonLoading();
 
   useEffect(() => {
+   
     present({
       message: "Cargando...",
       duration: 1500,
@@ -39,10 +41,11 @@ function Usuario() {
           console.error("Error al obtener la lista de estados:", error);
         })
         .finally(() => {
+          
           dismiss();
         });
     }, 1500);
-  }, []);
+  }, [n]);
 
   return (
     <>

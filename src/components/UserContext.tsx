@@ -78,11 +78,23 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       setErrors(error.response.data.message);
     }
   };
-   const logout = () => {
+   const logout = async () => {
     //Cookies.remove("token");
     localStorage.clear();
     setUser(null);
     setIsAuthenticated(false);
+
+    if ('caches' in window) {
+      try {
+          const cacheNames = await caches.keys();
+          await Promise.all(
+              cacheNames.map(cacheName => caches.delete(cacheName))
+          );
+          console.log('Cache cleared');
+      } catch (error) {
+          console.error('Error clearing cache', error);
+      }
+  }
     
   };
   

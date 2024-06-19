@@ -16,11 +16,11 @@ import {
   useIonLoading,
 } from "@ionic/react";
 import axios from "axios";
-import FormDiagnostico from "./Formularios/FormNuevaDiagnostico";
+import FormSupervisar from "./Formularios/FormSupervisar";
 import { useAuth } from "./UserContext";
 import { i } from "vite/dist/node/types.d-aGj9QkWt";
 
-function DiagnosticarIncidente() {
+function AsignarIncidentes() {
   const puerto = "http://localhost:3000";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
@@ -35,23 +35,21 @@ function DiagnosticarIncidente() {
       duration: 1500,
     });
     setTimeout(() => {
-      axios
-        .get(`${puerto}/incidencia-asignadas/${user.usuario.CT_Codigo_Usuario}`)
-        .then((response) => {
-          setIncidente(response.data);
-          // Cargar imágenes después de cargar incidentes
-          response.data.forEach((incidente) => {
-            getImagen(incidente.CT_Id_Incidencia);
-            getEstado(incidente.CN_Id_Estado);
-          });
-        })
-        .catch((error) => {
-          console.error("Error al obtener la lista de estados:", error);
-        })
-        .finally(() => {
-          dismiss();
+    axios
+      .get(`${puerto}/incidenciaregistradas/0`)
+      .then((response) => {
+        setIncidente(response.data);
+        response.data.forEach((incidente:any) => {
+          getImagen(incidente.CT_Id_Incidencia);
+          getEstado(incidente.CN_Id_Estado);
         });
-    }, 1500);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de estados:", error);
+      }).finally(() => {
+        dismiss();
+      });
+  }, 1500);
   }, []);
 
   async function getImagen(img: any) {
@@ -78,11 +76,12 @@ function DiagnosticarIncidente() {
   const incidentesFiltrados = incidentes.filter((incidente) =>
     incidente.CT_Id_Incidencia.toString().includes(searchText)
   );
+
   return (
     <>
       <IonItem style={{ justifyContent: "center", textAlign: "center" }}>
-        <IonLabel>Lista Incidente a diagnosticar</IonLabel>
-      </IonItem>{" "}
+        <IonLabel>Lista Incidente-Supervisor</IonLabel>
+      </IonItem>
       <IonItem
         style={{
           justifyContent: "center",
@@ -118,15 +117,7 @@ function DiagnosticarIncidente() {
             <IonGrid>
               <IonRow>
                 <IonCol size="2" offset="0">
-                  {estados[incidente.CN_Id_Estado] == "Asignado" && (
-                    <FormDiagnostico
-                      id={incidente.CT_Id_Incidencia}
-                      idUsuario={user.usuario.CT_Codigo_Usuario}
-                      datos={incidente}
-                      imagen={imagenes[incidente.CT_Id_Incidencia]}
-                      estado={estados[incidente.CN_Id_Estado]}
-                    />
-                  )}
+                <FormSupervisar id={ incidente.CT_Id_Incidencia} datos={incidente} imagen={imagenes[incidente.CT_Id_Incidencia] } estado={estados[incidente.CN_Id_Estado]}/>
                 </IonCol>
               </IonRow>
             </IonGrid>
@@ -135,7 +126,7 @@ function DiagnosticarIncidente() {
       ) : (
         <IonItem>
           <IonLabel style={{ justifyContent: "center", textAlign: "center" }}>
-            Aun no tienes incidentes asignados
+            Aun no tienes incidentes para evaluar
           </IonLabel>
         </IonItem>
       )}
@@ -143,4 +134,4 @@ function DiagnosticarIncidente() {
   );
 }
 
-export default DiagnosticarIncidente;
+export default AsignarIncidentes;

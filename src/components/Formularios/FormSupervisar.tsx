@@ -15,31 +15,32 @@ import {
   IonSelect,
   IonSelectOption,
   IonText,
+  IonTextarea,
 } from "@ionic/react";
 import { OverlayEventDetail } from "@ionic/core/components";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router";
-import { c, l } from "vite/dist/node/types.d-aGj9QkWt";
 import { useAuth } from "../UserContext";
+import { j } from "vite/dist/node/types.d-aGj9QkWt";
 
-function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
+function FormUsuario({ id, datos, imagen, estado }: any) {
   const puerto = "http://localhost:3000";
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
   const [CodigoIncidente, setCodigoIncidente] = useState();
   const [Descripcion, setDescripcion] = useState();
-  const [CT_Descripcion, setCT_Descripcion] = useState();
-  const [CN_Tiempo_Solucion, setCN_Tiempo_Solucion] = useState();
-  const [CT_Compra, setCT_Compra] = useState();
-
   const [Lugar, setLugar] = useState();
   const [Titulo, setTitulo] = useState();
   const [Costos, setCostos] = useState();
   const [Duracion, setDuracion] = useState();
+  const [Justificacion, setJustificacion] = useState();
 
   const [Categoria, setCategoria] = useState();
   const [Categorias, setCategorias] = useState();
+  const [Diagnostico, setDiagnostico] = useState();
+  const [TiempoSolucion, setTiempoSolucion] = useState();
+  const [RequiereCompra, setRequieresCompra] = useState();
 
   const [Prioridad, setPrioridad] = useState();
   const [Prioridades, setPrioridades] = useState();
@@ -51,6 +52,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
   const [Afectaciones, setAfectaciones] = useState();
 
   const [Tecnico, setTecnico] = useState();
+  const [NuevoEstado, setNuevoEstado] = useState();
   const [Tecnicos, setTecnicos] = useState();
 
   const [CategoriaError, setCategoriaError] = useState("");
@@ -60,51 +62,43 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
   const [RiesgoError, setRiesgoError] = useState("");
   const [AfectacionError, setAfectacionError] = useState("");
   const [TecnicoError, setTecnicoError] = useState("");
-  const [DescripcionError, setDescripcionError] = useState("");
-  const [TiempoSolucionError, setTSolucionError] = useState("");
-  const [CompraError, setCompraError] = useState("");
-  const [setTiempoSolucionError, setsetTiempoSolucionError] = useState("");
   const [peticionError, setPeticionErro] = useState("");
+  const [EstadoError, setEstadoError] = useState("");
+  const [JustificacionError, setJustificacionError] = useState("");
   const { user } = useAuth();
 
-  function diagnosticarIncidente() {
+  function supervisarIncidente() {
     axios
-      .post(`${puerto}/incidencia/crear/diagnostico`, {
-        CT_Descripcion: CT_Descripcion,
-        CN_Tiempo_Solucion: CN_Tiempo_Solucion,
-        Incidencia: CodigoIncidente,
-        Usuario: idUsuario,
-        CT_Compra: CT_Compra,
+      .put(`${puerto}/incidencia/supervizar/${CodigoIncidente}`, {
+        CN_Id_Estado: NuevoEstado,
+        justificacionCierre: Justificacion,
       })
-      .then((response) => {
+      .then(function (response) {
         console.log(response);
-        modal.current?.dismiss(input.current?.value, "confirm");
         window.location.href = "/home";
       })
-      .catch((error) => {
-        console.error("Error al obtener la lista de estados:", error);
+      .catch(function (error) {
+        console.log(error);
         setPeticionErro(
           "Error al agregar el usuario, " + error.response.data.msg
         );
       });
     axios.post(`${puerto}/bitacora1`, {
       CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
-      CN_Id_Pantalla: 3,
-      CT_Nombre_Referencia: `acción=Diagnostica Incidente, Código de pantalla = 3, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
+      CN_Id_Pantalla: 4,
+      CT_Nombre_Referencia: `acción=Evaluar Incidente, Código de pantalla = 5, código rol = 2,código usuario=${user.usuario.CT_Codigo_Usuario}`,
     });
     axios.post(`${puerto}/bitacora2`, {
       CT_Codigo_Usuario: user.usuario.CT_Codigo_Usuario,
-      CN_Id_Estado: 2,
-      CN_Id_Nuevo_Estado: CT_Compra == "Si" ? 5 : 4,
+      CN_Id_Estado: estado == "En reparación" ? 4 : 5,
+      CN_Id_Nuevo_Estado: NuevoEstado,
       CT_Id_Incidencia: CodigoIncidente,
     });
   }
 
   function resetearEstados() {
-    setDescripcionError("");
-    setTSolucionError("");
-    setCompraError("");
-    setPeticionErro("");
+    setNuevoEstado("");
+    setJustificacion("");
   }
 
   function actualizarDato() {
@@ -116,12 +110,12 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
     setPrioridad(datos.CN_Id_Prioridad);
     setRiesgo(datos.CN_Id_Riesgo);
     setAfectacion(datos.CN_Id_Afectacion);
-    setTecnico(idUsuario);
     setCostos(datos.CN_Costos);
     setDuracion(datos.CN_Duracion);
   }
 
   useEffect(() => {
+    console.log(estado);
     axios
       .get(`${puerto}/categorias`)
       .then((response) => {
@@ -167,11 +161,28 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
       .catch((error) => {
         console.error("Error al obtener la lista de estados:", error);
       });
+    axios
+      .get(`${puerto}/tecnicos/${datos.CT_Id_Incidencia}`)
+      .then((response) => {
+        setTecnico(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de estados:", error);
+      });
+    axios
+      .get(`${puerto}/incidencia/diagnostico/${datos.CT_Id_Incidencia}`)
+      .then((response) => {
+        setDiagnostico(response.data[0].CT_Descripcion);
+        setTiempoSolucion(response.data[0].CN_Tiempo_Solucion);
+        setRequiereCompra(response.data[0].CT_Compra);
+      })
+      .catch((error) => {
+        console.error("Error al obtener la lista de estados:", error);
+      });
   }, []);
 
   function confirm() {
-    console.log("Editando");
-    diagnosticarIncidente();
+    supervisarIncidente();
     actualizarDato();
   }
 
@@ -195,16 +206,8 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
           }
         `}
         </style>
-        <IonButton
-          id={id}
-          fill="outline"
-          size="small"
-          color="sumary"
-          onClick={() => {
-            console.log("click");
-          }}
-        >
-          Diagnosticar
+        <IonButton id={id} fill="outline" size="small" color="danger">
+          Evaluar
         </IonButton>
         <IonModal
           ref={modal}
@@ -229,7 +232,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   color: "black",
                 }}
               >
-                Diagnosticar
+                Supervisar Incidente
               </IonTitle>
               <IonButtons slot="end">
                 <IonButton
@@ -238,15 +241,10 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   color="primary"
                   fill="clear"
                   disabled={
-                    !CT_Descripcion ||
-                    !CN_Tiempo_Solucion ||
-                    !CT_Compra ||
-                    DescripcionError != "" ||
-                    TiempoSolucionError != "" ||
-                    CompraError != ""
+                    !NuevoEstado || (NuevoEstado == 9 && !Justificacion)
                   }
                 >
-                  Terminar
+                  Confirm
                 </IonButton>
               </IonButtons>
             </IonToolbar>
@@ -319,7 +317,26 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   placeholder="Ingrese el costo del incidente"
                   value={Costos}
                   readonly={true}
+                  onIonFocus={() => {
+                    if (!Costos) {
+                      // Asume que 'costos' es el estado que almacena el valor actual del input
+                      setCostoError("Por favor, ingrese un costo ");
+                    }
+                  }}
+                  onIonInput={(e: any) => {
+                    // Cambiado de onIonInput a onIonChange
+                    const value = e.detail.value; // Cambiado de e.target.value a e.detail.value
+                    if (!value) {
+                      // Asegurarse de que value no sea null/undefined
+                      setCostoError("Por favor, ingrese un costo");
+                    } else {
+                      setCostos(value);
+                      setCostoError("");
+                    }
+                  }}
                 />
+                <IonText color="danger">{CostoError}</IonText>{" "}
+                {/* Mostrar el mensaje de error aquí */}
               </IonRow>
 
               <br />
@@ -329,10 +346,29 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   label="Duracion Horas"
                   labelPlacement="floating"
                   fill="outline"
-                  placeholder="Ingrese la duracion del incidente"
                   value={Duracion}
                   readonly={true}
+                  placeholder="Ingrese la duracion del incidente"
+                  onIonFocus={() => {
+                    if (!Duracion) {
+                      // Asume que 'costos' es el estado que almacena el valor actual del input
+                      setDuracionError("Por favor, ingrese una duracion");
+                    }
+                  }}
+                  onIonInput={(e: any) => {
+                    // Cambiado de onIonInput a onIonChange
+                    const value = e.detail.value; // Cambiado de e.target.value a e.detail.value
+                    if (!value) {
+                      // Asegurarse de que value no sea null/undefined
+                      setDuracionError("Por favor, ingrese un costo válido.");
+                    } else {
+                      setDuracion(value);
+                      setDuracionError("");
+                    }
+                  }}
                 />
+                <IonText color="danger">{DuracionError}</IonText>{" "}
+                {/* Mostrar el mensaje de error aquí */}
               </IonRow>
               <br />
               <IonRow>
@@ -341,8 +377,17 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   fill="outline"
                   labelPlacement="floating"
                   value={Categoria}
+                  disabled
                   placeholder="Seleccione una Categoria"
-                  disabled={true}
+                  onIonChange={(e: any) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setCategoria(value);
+                      setCategoriaError("");
+                    } else {
+                      setCategoriaError("Por favor, selecciona un Categoria");
+                    }
+                  }}
                 >
                   {Categorias ? (
                     Categorias.map((categoria): any => {
@@ -359,6 +404,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                     <IonSelectOption value="0">Desconocido</IonSelectOption>
                   )}
                 </IonSelect>
+                <IonText color="danger">{CategoriaError}</IonText>
               </IonRow>
 
               <br />
@@ -368,7 +414,16 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   fill="outline"
                   labelPlacement="floating"
                   value={Prioridad}
-                  disabled={true}
+                  disabled
+                  onIonChange={(e: any) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setPrioridad(value);
+                      setPrioridadError("");
+                    } else {
+                      setPrioridadError("Por favor, selecciona una Prioridad");
+                    }
+                  }}
                 >
                   {Prioridades ? (
                     Prioridades.map((Prioridad): any => {
@@ -385,6 +440,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                     <IonSelectOption value="0">Desconocido</IonSelectOption>
                   )}
                 </IonSelect>
+                <IonText color="danger">{PrioridadError}</IonText>
               </IonRow>
 
               <br />
@@ -394,7 +450,16 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   fill="outline"
                   labelPlacement="floating"
                   value={Riesgo}
-                  disabled={true}
+                  disabled
+                  onIonChange={(e: any) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setRiesgo(value);
+                      setRiesgoError("");
+                    } else {
+                      setRiesgoError("Por favor, selecciona un Riesgo");
+                    }
+                  }}
                 >
                   {Riesgos ? (
                     Riesgos.map((Riesgo): any => {
@@ -411,6 +476,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                     <IonSelectOption value="0">Desconocido</IonSelectOption>
                   )}
                 </IonSelect>
+                <IonText color="danger">{RiesgoError}</IonText>
               </IonRow>
 
               <br />
@@ -420,7 +486,18 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   fill="outline"
                   labelPlacement="floating"
                   value={Afectacion}
-                  disabled={true}
+                  disabled
+                  onIonChange={(e: any) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setAfectacion(value);
+                      setAfectacionError("");
+                    } else {
+                      setAfectacionError(
+                        "Por favor, selecciona una Afectacion"
+                      );
+                    }
+                  }}
                 >
                   {Afectaciones ? (
                     Afectaciones.map((Afectacion): any => {
@@ -437,6 +514,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                     <IonSelectOption value="0">Desconocido</IonSelectOption>
                   )}
                 </IonSelect>
+                <IonText color="danger">{AfectacionError}</IonText>
               </IonRow>
 
               <br />
@@ -445,8 +523,31 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   label="Tecnico"
                   fill="outline"
                   labelPlacement="floating"
+                  multiple={true}
                   value={Tecnico}
-                  disabled={true}
+                  disabled
+                  onClick={() => {
+                    axios
+                      .get(`${puerto}/tecnicos`)
+                      .then((response) => {
+                        setTecnicos(response.data);
+                      })
+                      .catch((error) => {
+                        console.error(
+                          "Error al obtener la lista de estados:",
+                          error
+                        );
+                      });
+                  }}
+                  onIonChange={(e: any) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setTecnico(value);
+                      setTecnicoError("");
+                    } else {
+                      setTecnicoError("Por favor, seleccione un Tecnico");
+                    }
+                  }}
                 >
                   {Tecnicos ? (
                     Tecnicos.map((Tecnico): any => {
@@ -455,7 +556,7 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                           key={Tecnico.CN_Id}
                           value={Tecnico.CT_Codigo_Usuario}
                         >
-                          {Tecnico.Usuario}
+                          {Tecnico.CT_Codigo_Usuario}- {Tecnico.Usuario}
                         </IonSelectOption>
                       );
                     })
@@ -467,31 +568,28 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
               </IonRow>
               <br />
               <IonRow>
-                <IonInput
-                  type="text"
+                <IonSelect
+                  label="Requiere Compra"
+                  labelPlacement="floating"
+                  fill="outline"
+                  placeholder="Ingrese la compra"
+                  value={RequiereCompra}
+                  disabled
+                >
+                  <IonSelectOption value="Si">Si</IonSelectOption>
+                  <IonSelectOption value="No">No</IonSelectOption>
+                </IonSelect>
+              </IonRow>
+              <br />
+              <IonRow>
+                <IonTextarea
                   label="Diagnostico"
                   labelPlacement="floating"
                   fill="outline"
                   placeholder="Ingrese la diagnostico"
-                  onIonFocus={() => {
-                    if (!CT_Descripcion) {
-                      // Asume que 'costos' es el estado que almacena el valor actual del input
-                      setDescripcionError("Por favor, ingrese un diagnostico.");
-                    }
-                  }}
-                  onIonInput={(e: any) => {
-                    const value = e.detail.value;
-                    if (!value) {
-                      setDescripcionError(
-                        "Por favor, ingrese un diagnostico válida."
-                      );
-                    } else {
-                      setCT_Descripcion(value);
-                      setDescripcionError("");
-                    }
-                  }}
+                  readonly={true}
+                  value={Diagnostico}
                 />
-                <IonText color="danger">{DescripcionError}</IonText>
               </IonRow>
               <br />
               <IonRow>
@@ -501,45 +599,68 @@ function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
                   labelPlacement="floating"
                   fill="outline"
                   placeholder="Ingrese el tiempo de solución"
-                  onIonFocus={() => {
-                    if (!CN_Tiempo_Solucion) {
-                      // Asume que 'costos' es el estado que almacena el valor actual del input
-                      setTSolucionError("Por favor, ingrese una duracion");
-                    }
-                  }}
-                  onIonInput={(e: any) => {
-                    const value = e.detail.value;
-                    if (!value) {
-                      setTSolucionError("Por favor, ingrese un tiempo válido.");
-                    } else {
-                      setCN_Tiempo_Solucion(value);
-                      setTSolucionError("");
-                    }
-                  }}
+                  readonly={true}
+                  value={TiempoSolucion}
                 />
-                <IonText color="danger">{TiempoSolucionError}</IonText>
               </IonRow>
+
               <br />
               <IonRow>
                 <IonSelect
-                  label="Requiere Compra"
-                  labelPlacement="floating"
+                  label="Evaluacion"
                   fill="outline"
-                  placeholder="Ingrese la compra"
+                  labelPlacement="floating"
+                  placeholder="Seleccione un Estado"
+                  value={NuevoEstado}
                   onIonChange={(e: any) => {
-                    const value = e.detail.value;
-                    if (!value) {
-                      setCompraError("Por favor, seleccione una respuesta.");
+                    const value = e.target.value;
+                    if (value) {
+                      setNuevoEstado(value);
+                      setEstadoError("");
                     } else {
-                      setCT_Compra(value);
-                      setCompraError("");
+                      setEstadoError("Por favor, seleccione un estado");
                     }
                   }}
                 >
-                  <IonSelectOption value="Si">Si</IonSelectOption>
-                  <IonSelectOption value="No">No</IonSelectOption>
+                  <IonSelectOption value={7}>7- Aprobado</IonSelectOption>
+                  <IonSelectOption value={8}>8- Rechazado</IonSelectOption>
+                  <IonSelectOption value={9}>9- Cerrado</IonSelectOption>
                 </IonSelect>
-                <IonText color="danger">{CompraError}</IonText>
+                <IonText color="danger">{EstadoError}</IonText>
+              </IonRow>
+              <br />
+              <IonRow>
+                {NuevoEstado == 9 && (
+                  <>
+                    <IonInput
+                      type="text"
+                      label="Justicacion de Cierre"
+                      labelPlacement="floating"
+                      fill="outline"
+                      placeholder="Ingrese la justificacion del cierre"
+                      value={Justificacion}
+                      onIonFocus={() => {
+                        if (!Justificacion) {
+                          setJustificacionError(
+                            "Por favor, Ingrese la justificacion del cierre "
+                          );
+                        }
+                      }}
+                      onIonInput={(e: any) => {
+                        const value = e.detail.value; // Cambiado de e.target.value a e.detail.value
+                        if (!value) {
+                          setJustificacionError(
+                            "Por favor, Ingrese la justificacion del cierre"
+                          );
+                        } else {
+                          setJustificacion(value);
+                          setJustificacionError("");
+                        }
+                      }}
+                    />
+                    <IonText color="danger">{JustificacionError}</IonText>
+                  </>
+                )}
               </IonRow>
             </IonGrid>
           </IonContent>

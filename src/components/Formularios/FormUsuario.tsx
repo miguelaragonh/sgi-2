@@ -254,7 +254,6 @@ function FormUsuario({ id, datos }: any) {
                   onIonInput={(e: any) => {
                     const value = e.target.value;
                     if (value.length >= 3) {
-                      console.log(value);
                       setNombre(value);
                       setNombreError("");
                     } else {

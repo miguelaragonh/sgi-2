@@ -16,6 +16,7 @@ import Usuarios from "./components/Usuario";
 import IncidenteNuevo from "./components/IncidenteNuevo";
 import DiagnosticoIncidente from "./components/DiagnosticoIncidente";
 import AsignarIncidente from "./components/AsignarIncidentes";
+import SupervisarIncidentes from "./components/SupervisarIncidentes";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -80,7 +81,11 @@ const App: React.FC = () => {
                   <Page childComponent={<DiagnosticoIncidente />} />
                 )}
               />
-
+              <RouteUsuario
+                path="/supervisar-incidente"
+                exact
+                component={() => <Page childComponent={<SupervisarIncidentes />} />}
+              />
               <RouteUsuario
                 path="/home"
                 exact
