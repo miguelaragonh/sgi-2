@@ -37,6 +37,8 @@ function Login() {
   const [present, dismiss] = useIonLoading();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const puerto = "https://sgi-b2-production.up.railway.app";
+
   useEffect(() => {
     if (isAuthenticated) navigate.push("/home");
   }, [isAuthenticated]);
@@ -61,7 +63,7 @@ function Login() {
       });
       setTimeout(() => {
         axios
-          .post("/usuarios/iniciar", {
+          .post(`${puerto}/usuarios/iniciar`, {
             CT_Usuario: usuario,
             CT_Contraseña: contrasena,
           })

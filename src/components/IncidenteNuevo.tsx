@@ -20,7 +20,7 @@ import FormNuevaIncidencia from "./Formularios/FormNuevaIncidencia";
 import { useAuth } from "./UserContext";
 
 function IncidenteNuevo() {
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Estado para almacenar los estados

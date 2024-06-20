@@ -28,7 +28,7 @@ export default function FromContrasena({ id }: any) {
   const [contrasena, setContrasena] = useState(false);
   const [ContrasenaError, setContrasenaError] = useState(false);
   const modal = useRef<HTMLIonModalElement>(null);
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
 

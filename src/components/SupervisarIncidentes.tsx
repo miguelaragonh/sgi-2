@@ -21,7 +21,7 @@ import { useAuth } from "./UserContext";
 import { i } from "vite/dist/node/types.d-aGj9QkWt";
 
 function AsignarIncidentes() {
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes

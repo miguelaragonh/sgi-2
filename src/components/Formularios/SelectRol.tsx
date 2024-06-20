@@ -12,7 +12,7 @@ import { useAuth } from "../UserContext";
 function Example({ id }: any) {
   const [showSelect, setShowSelect] = useState(false);
   const selectRef = useRef(null);
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const [roles, setRoles] = useState([]);
   const [selectedRoles, setSelectedRoles] = useState([]); 
   const [RolesAsignados, setRolesAsinados] = useState(false);

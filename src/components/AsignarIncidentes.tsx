@@ -22,7 +22,7 @@ import { i } from "vite/dist/node/types.d-aGj9QkWt";
 import { setIn } from "formik";
 
 function AsignarIncidentes() {
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes

@@ -24,7 +24,7 @@ import { useAuth } from "../UserContext";
 
 
 function FormUsuario({ id, datos }: any) {
-  const puerto = "http://localhost:3000";
+  const puerto = "https://sgi-b2-production.up.railway.app";
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);
