@@ -18,15 +18,17 @@ import axios, { Axios } from "axios";
 import FormUsuario from "./Formularios/FormUsuario";
 import SelectRol from "./Formularios/SelectRol";
 import FromContrasena from "./Formularios/FormContrasena";
+import { useAuth } from "./UserContext";
 
 function Usuario() {
   const puerto = "http://localhost:3000";
   const [usuarios, setUsuarios] = useState([]);
   const [n, setN] = useState(0);
   const [present, dismiss] = useIonLoading();
+  const { click } = useAuth();
 
   useEffect(() => {
-   
+   setUsuarios([]);
     present({
       message: "Cargando...",
       duration: 1500,
@@ -45,7 +47,7 @@ function Usuario() {
           dismiss();
         });
     }, 1500);
-  }, [n]);
+  }, [click]);
 
   return (
     <>

@@ -19,20 +19,23 @@ import axios from "axios";
 import FormAsignar from "./Formularios/FormAsignar";
 import { useAuth } from "./UserContext";
 import { i } from "vite/dist/node/types.d-aGj9QkWt";
+import { setIn } from "formik";
 
 function AsignarIncidentes() {
   const puerto = "http://localhost:3000";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
-  const { user } = useAuth();
+  const { user,  click  } = useAuth();
   const [present, dismiss] = useIonLoading();
   const [searchText, setSearchText] = useState(""); // Nuevo estado para el valor
+
 
   const incidentesFiltrados = incidentes.filter((incidente) =>
     incidente.CT_Id_Incidencia.toString().includes(searchText)
   );
   useEffect(() => {
+    setIncidente([]);
     present({
       message: "Cargando...",
       duration: 1500,
@@ -53,7 +56,7 @@ function AsignarIncidentes() {
         dismiss();
       });
   }, 1500);
-  }, []);
+  }, [click]);
 
   async function getImagen(img: any) {
     try {
@@ -67,7 +70,7 @@ function AsignarIncidentes() {
   async function getEstado(idEstado: any) {
     try {
       const estados = await axios.get(`${puerto}/estados/${idEstado}`);
-      console.log(estados.data.CT_Descripcion);
+    
       setEstados((prev) => ({
         ...prev,
         [idEstado]: estados.data.CT_Descripcion,

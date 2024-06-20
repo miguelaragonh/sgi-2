@@ -25,11 +25,12 @@ function DiagnosticarIncidente() {
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
-  const { user } = useAuth();
+  const { user,click } = useAuth();
   const [present, dismiss] = useIonLoading();
   const [searchText, setSearchText] = useState(""); // Estado para el valor de búsqueda
 
   useEffect(() => {
+    setIncidente([]);
     present({
       message: "Cargando...",
       duration: 1500,
@@ -52,7 +53,7 @@ function DiagnosticarIncidente() {
           dismiss();
         });
     }, 1500);
-  }, []);
+  }, [click]);
 
   async function getImagen(img: any) {
     try {
@@ -66,7 +67,7 @@ function DiagnosticarIncidente() {
   async function getEstado(idEstado: any) {
     try {
       const estados = await axios.get(`${puerto}/estados/${idEstado}`);
-      console.log(estados.data.CT_Descripcion);
+     
       setEstados((prev) => ({
         ...prev,
         [idEstado]: estados.data.CT_Descripcion,

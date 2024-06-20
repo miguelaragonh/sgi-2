@@ -25,11 +25,12 @@ function AsignarIncidentes() {
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
-  const { user } = useAuth();
+  const { user, click } = useAuth();
   const [present, dismiss] = useIonLoading();
   const [searchText, setSearchText] = useState(""); // Estado para el valor de búsqueda
 
   useEffect(() => {
+    setIncidente([]);
     present({
       message: "Cargando...",
       duration: 1500,
@@ -50,7 +51,7 @@ function AsignarIncidentes() {
         dismiss();
       });
   }, 1500);
-  }, []);
+  }, [click]);
 
   async function getImagen(img: any) {
     try {

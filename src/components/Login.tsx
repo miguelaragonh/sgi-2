@@ -69,6 +69,8 @@ function Login() {
             setData(response.data);
             datos(response.data);
             localStorage.setItem("token", response.data.token);
+             window.location.href = "/home";
+
           })
           .catch((error) => {
             if (error.response) {

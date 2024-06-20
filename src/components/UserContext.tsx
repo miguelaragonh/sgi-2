@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { createContext, useContext, useState } from "react";
+import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 
 const AuthContext = createContext<any>(null);
@@ -49,23 +50,12 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem('token')
     if (token) { 
       const usuarios=decodeToken(token);
+      console.log(usuarios);
       setUser(usuarios);
       setIsAuthenticated(true);
      
     }
   }, []);
-  /*const [loading, setLoading] = useState(true);
-
-  // clear errors after 5 seconds
-  useEffect(() => {
-    if (errors.length > 0) {
-      const timer = setTimeout(() => {
-        setErrors([]);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [errors]);
-*/
   const datos = async (user: any) => {
     try {
       const res = user;
@@ -79,7 +69,6 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     }
   };
    const logout = async () => {
-    //Cookies.remove("token");
     localStorage.clear();
     setUser(null);
     setIsAuthenticated(false);
@@ -94,25 +83,18 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
       } catch (error) {
           console.error('Error clearing cache', error);
       }
-  }
-    
+  } 
   };
   
-  /*
-  const signin = async (user: any) => {
-    try {
-      const res = await loginRequest(user);
-      setUser(res.data);
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.log(error);
-      // setErrors(error.response.data.message);
-    }
-  };
 
- 
+  //exportar un estado de clickeo 
 
-  */
+
+
+ const [click, setClick] = useState(false);
+
+ const handleClickeo = () =>{setClick(!click);
+ } ;
 
   return (
     <AuthContext.Provider
@@ -122,11 +104,8 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         user,
         nombre,
         logout,
-        /*signin,
-        
-        
-        errors,
-        loading,*/
+        click,
+        handleClickeo
       }}
     >
       {children}

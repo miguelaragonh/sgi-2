@@ -19,6 +19,7 @@ import FormUsuario from "./Formularios/FormUsuario";
 import SelectRol from "./Formularios/SelectRol";
 import FromContrasena from "./Formularios/FormContrasena";
 import { c } from "vite/dist/node/types.d-aGj9QkWt";
+import { useAuth } from "./UserContext";
 
 export default function ReportesCargaTrabajo() {
   const puerto = "http://localhost:3000";
@@ -26,8 +27,10 @@ export default function ReportesCargaTrabajo() {
   const [n, setN] = useState(0);
   const [present, dismiss] = useIonLoading();
   const [Cantidad, setCantidad] = useState({}); 
+  const { click } = useAuth();
   const [Cantidad2, setCantidad2] = useState({}); 
   useEffect(() => {
+    setUsuarios([]);
     present({
       message: "Cargando...",
       duration: 1500,
@@ -54,7 +57,7 @@ export default function ReportesCargaTrabajo() {
 
         
     }, 1500);
-  }, [n]);
+  }, [click]);
   async function getCantidad1(code:any) {try {
       const estados = await axios.get(`${puerto}/reportes1/${code}/1`).then((response) => {
          setCantidad((prev) => ({

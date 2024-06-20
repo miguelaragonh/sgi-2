@@ -24,7 +24,7 @@ var appPages: AppPage[] = [];
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const { datos, isAuthenticated, logout, user } = useAuth();
+  const { datos, isAuthenticated, logout, user, handleClickeo } = useAuth();
   const navigate = useHistory();
   const onSalir = () => {
     logout();
@@ -33,6 +33,13 @@ const Menu: React.FC = () => {
   useEffect(() => {
     if (isAuthenticated) {
       appPages = [
+        {
+          title: "Home",
+          url: "/home",
+        }];
+     /*user.rol.map((rol) => ( 
+      rol.CN_Id_Rol</IonNote> ))*/
+      /*appPages = [
         {
           title: "Home",
           url: "/home",
@@ -59,7 +66,46 @@ const Menu: React.FC = () => {
           title: "Reportes Cargas de trabajos",
           url: "/cargas-trabajo",
         },
-      ];
+      ];*/
+
+      user.rol.forEach((rol: any) => {
+        if (rol.CN_Id_Rol == 1) {
+          appPages.push({
+            title: "Usuarios",
+            url: "/usuarios",
+          });
+          appPages.push({
+            title: "Reportes Cargas de trabajos",
+            url: "/cargas-trabajo",
+          });
+        }else if (rol.CN_Id_Rol == 2) {
+          appPages.push({
+            title: "Lista Incidentes-Usuario",
+            url: "/incidentes-usuario",
+          });
+        }else if (rol.CN_Id_Rol == 3) {
+          appPages.push({
+            title: "Asignar Incidente",
+            url: "/asignar-incidente",
+          });
+        }else if (rol.CN_Id_Rol == 4) {
+          appPages.push({
+            title: "Lista Incidentes-Tecnico",
+            url: "/diagnosticar-incidente",
+          });
+        }else if (rol.CN_Id_Rol == 5) {
+          appPages.push({
+            title: "Supervisar Incidentes",
+            url: "/supervisar-incidente",
+          });
+        }else if (rol.CN_Id_Rol == 4) {
+          
+        }
+        
+        
+
+      });
+      console.log(appPages);
     }
   }, [isAuthenticated]);
 
@@ -70,6 +116,10 @@ const Menu: React.FC = () => {
           {isAuthenticated && (<IonCard><br/> 
             <IonListHeader>{user.usuario.CT_Nombre}</IonListHeader>
             <IonNote>{user.usuario.CT_Usuario}</IonNote>
+            {/*Mapear user.rol[i].CN_Id_Rol*/}
+            
+
+
         </IonCard>)}
 
           {appPages.map((appPage, index) => {
@@ -83,6 +133,9 @@ const Menu: React.FC = () => {
                   routerDirection="none"
                   lines="none"
                   detail={false}
+                  onClick={
+                  handleClickeo
+                  }
                 >
                   <IonLabel>{appPage.title}</IonLabel>
                 </IonItem>
