@@ -1,0 +1,2 @@
+Administrador
+luis.aragonduarte@ucr.ac.cr = 12345678

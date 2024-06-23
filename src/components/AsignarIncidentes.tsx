@@ -22,7 +22,7 @@ import { i } from "vite/dist/node/types.d-aGj9QkWt";
 import { setIn } from "formik";
 
 function AsignarIncidentes() {
-  const puerto = "https://sgi-b2-production.up.railway.app";
+  const puerto = "http://localhost:3000";
   const [incidentes, setIncidente] = useState([]);
   const [imagenes, setImagenes] = useState({}); // Nuevo estado para almacenar las imágenes
   const [estados, setEstados] = useState({}); // Nuevo estado para almacenar las imágenes
@@ -87,7 +87,7 @@ function AsignarIncidentes() {
           textAlign: "center",
           flexDirection: "column",
         }}>
-        <IonLabel>Lista Incidente-Usuario</IonLabel>
+        <IonLabel>Lista Incidente-Encargado</IonLabel>
       </IonItem>
 
       <IonItem

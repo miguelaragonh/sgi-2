@@ -37,7 +37,8 @@ function Login() {
   const [present, dismiss] = useIonLoading();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
-  const puerto = "https://sgi-b2-production.up.railway.app";
+
+  const puerto = "http://localhost:3000";
 
   useEffect(() => {
     if (isAuthenticated) navigate.push("/home");
@@ -71,7 +72,7 @@ function Login() {
             setData(response.data);
             datos(response.data);
             localStorage.setItem("token", response.data.token);
-             window.location.href = "/home";
+            window.location.href = "/home";
 
           })
           .catch((error) => {

@@ -20,7 +20,7 @@ import axios from "axios";
 import { useAuth } from "../UserContext";
 
 function FormNuevaIncidencia({ id }: any) {
-  const puerto = "https://sgi-b2-production.up.railway.app";
+  const puerto = "http://localhost:3000";
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);

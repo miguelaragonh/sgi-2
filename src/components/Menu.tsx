@@ -24,7 +24,7 @@ var appPages: AppPage[] = [];
 
 const Menu: React.FC = () => {
   const location = useLocation();
-  const { datos, isAuthenticated, logout, user, handleClickeo } = useAuth();
+  const { datos, isAuthenticated, logout, user, handleClickeo, click } = useAuth();
   const navigate = useHistory();
   const onSalir = () => {
     logout();
@@ -37,37 +37,6 @@ const Menu: React.FC = () => {
           title: "Home",
           url: "/home",
         }];
-     /*user.rol.map((rol) => ( 
-      rol.CN_Id_Rol</IonNote> ))*/
-      /*appPages = [
-        {
-          title: "Home",
-          url: "/home",
-        },
-        {
-          title: "Usuarios",
-          url: "/usuarios",
-        },{
-          title: "Lista Incidentes-Usuario",
-          url: "/incidentes-usuario",
-        },
-        {
-          title: "Asignar Incidente",
-          url: "/asignar-incidente",
-        },
-        {
-          title: "Lista Incidentes-Tecnico",
-          url: "/diagnosticar-incidente",
-        },
-        {
-          title: "Supervisar Incidentes",
-          url: "/supervisar-incidente",
-        },{
-          title: "Reportes Cargas de trabajos",
-          url: "/cargas-trabajo",
-        },
-      ];*/
-
       user.rol.forEach((rol: any) => {
         if (rol.CN_Id_Rol == 1) {
           appPages.push({
@@ -88,6 +57,10 @@ const Menu: React.FC = () => {
             title: "Asignar Incidente",
             url: "/asignar-incidente",
           });
+          appPages.push({
+            title: "Reportes Cargas de trabajos",
+            url: "/cargas-trabajo",
+          });
         }else if (rol.CN_Id_Rol == 4) {
           appPages.push({
             title: "Lista Incidentes-Tecnico",
@@ -98,16 +71,10 @@ const Menu: React.FC = () => {
             title: "Supervisar Incidentes",
             url: "/supervisar-incidente",
           });
-        }else if (rol.CN_Id_Rol == 4) {
-          
         }
-        
-        
-
       });
-      console.log(appPages);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, click]);
 
   return (
     <IonMenu contentId="main" type="overlay" side="start">
@@ -115,7 +82,7 @@ const Menu: React.FC = () => {
         <IonList id="inbox-list">
           {isAuthenticated && (<IonCard><br/> 
             <IonListHeader>{user.usuario.CT_Nombre}</IonListHeader>
-            <IonNote>{user.usuario.CT_Usuario}</IonNote>
+            <IonNote>{user.usuario.CT_Usuario}</IonNote> 
             {/*Mapear user.rol[i].CN_Id_Rol*/}
             
 

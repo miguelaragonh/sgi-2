@@ -50,7 +50,6 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
     const token = localStorage.getItem('token')
     if (token) { 
       const usuarios=decodeToken(token);
-      console.log(usuarios);
       setUser(usuarios);
       setIsAuthenticated(true);
      
@@ -96,6 +95,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
  const handleClickeo = () =>{setClick(!click);
  } ;
 
+
   return (
     <AuthContext.Provider
       value={{
@@ -106,6 +106,7 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         logout,
         click,
         handleClickeo
+
       }}
     >
       {children}

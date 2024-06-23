@@ -23,7 +23,7 @@ import { c, l } from "vite/dist/node/types.d-aGj9QkWt";
 import { useAuth } from "../UserContext";
 
 function FormUsuario({ id, idUsuario, datos, imagen, estado }: any) {
-  const puerto = "https://sgi-b2-production.up.railway.app";
+  const puerto = "http://localhost:3000";
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);

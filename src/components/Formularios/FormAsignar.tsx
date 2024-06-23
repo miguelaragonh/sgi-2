@@ -22,7 +22,7 @@ import { Redirect, useHistory } from "react-router";
 import { useAuth } from "../UserContext";
 
 function FormUsuario({ id, datos, imagen, estado }: any) {
-  const puerto = "https://sgi-b2-production.up.railway.app";
+  const puerto = "http://localhost:3000";
   const history = useHistory();
   const modal = useRef<HTMLIonModalElement>(null);
   const input = useRef<HTMLIonInputElement>(null);

@@ -21,7 +21,7 @@ import FromContrasena from "./Formularios/FormContrasena";
 import { useAuth } from "./UserContext";
 
 function Usuario() {
-  const puerto = "https://sgi-b2-production.up.railway.app";
+  const puerto = "http://localhost:3000";
   const [usuarios, setUsuarios] = useState([]);
   const [n, setN] = useState(0);
   const [present, dismiss] = useIonLoading();

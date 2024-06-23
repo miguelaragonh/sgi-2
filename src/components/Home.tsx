@@ -1,10 +1,12 @@
-import React from "react";
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem, IonLabel, IonList, IonPage } from "@ionic/react";
+import React, { useEffect, useState } from "react";
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem, IonLabel, IonList, IonPage, IonToast } from "@ionic/react";
 import sgi from "../img/sgi.png";
 import { useAuth } from "./UserContext";
+import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 function Example() {
   const { user } = useAuth();
+
 
   return (
     <IonCard >
